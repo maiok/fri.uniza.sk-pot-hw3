@@ -1,5 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using SimpleChatClient;
 using SimpleChatLibrary;
@@ -19,6 +21,26 @@ namespace SimpleChatServer
             return _messages;
         }
 
+        public List<User> GetUsers()
+        {
+            List<User> listUsers = new List<User>();
+            foreach (var user in _registeredUsers)
+            {
+                listUsers.Add(user.Value);
+            }
+            return listUsers;
+        }
+
+        public List<string> GetUserNickNames()
+        {
+            List<String> listUsers = new List<String>();
+            foreach (var user in _registeredUsers)
+            {
+                listUsers.Add(user.Key);
+            }
+            return listUsers;
+        }
+
         public void SendMessage(string toUser, string text, byte[] imageBytes)
         {
             User user = new User();
@@ -28,7 +50,7 @@ namespace SimpleChatServer
 
             Message message = new Message();
             message.FromUser = _loggedUser;
-            message.ToUser = user;
+            message.ToUser = null;
             message.Text = text;
             message.ImageBytes = imageBytes;
 
@@ -46,7 +68,6 @@ namespace SimpleChatServer
         public bool RegisterUser(string nickname)
         {
             User newUser = new User();
-            newUser.Connection = OperationContext.Current.GetCallbackChannel<IClient>();
             newUser.NickName = nickname;
 
             return _registeredUsers.TryAdd(nickname, newUser);

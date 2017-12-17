@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Markup;
 using SimpleChatLibrary;
 
 namespace SimpleChatClient
@@ -11,10 +10,11 @@ namespace SimpleChatClient
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        public static IChatService Server;
-        private static DuplexChannelFactory<IChatService> _channelFactory;
+        private static IChatService _server;
+        private List<String> DataFromUser { get; set; }
+        private List<String> DataToUser { get; set; }
 
         private List<Message> ListMessages { get; set; }
 
@@ -22,14 +22,34 @@ namespace SimpleChatClient
         {
             InitializeComponent();
 
-            _channelFactory = new DuplexChannelFactory<IChatService>(new ClientCallback(), "ChatServiceEndPoint");
-            Server = _channelFactory.CreateChannel();
+            var channelFactory = new DuplexChannelFactory<IChatService>(new ClientCallback(), "ChatServiceEndPoint");
+            _server = channelFactory.CreateChannel();
+
+            DataToUser = new List<string>();
         }
 
-        public void SetListMessages()
+        // OBSLUHA GUI KOMPONENTOV *********************************************************
+
+        // Metoda mi refreshne obe comboboxy zo zoznamom uzivatelov
+        private void RefreshComboBoxUsers()
+        {
+            // Naplnim si pouzivatelov do comboboxu pre prihlasenie uzivatela
+            DataFromUser = _server.GetUserNickNames();
+            ComboBoxFromUser.ItemsSource = DataFromUser;
+            // Naplnim si pouzivatelov do comboboxu pre cieloveho pouzivatela
+            DataToUser.Add("Všetci");
+            DataToUser.AddRange(_server.GetUserNickNames());
+            ComboBoxToUser.ItemsSource = DataToUser;
+            ComboBoxToUser.SelectedIndex = 0; // Defaultne Vsetci
+        }
+
+        // OBSLUHA GUI KOMPONENTOV *********************************************************
+
+        public void RefreshListMessages()
         {
             //try
             //{
+            ListMessages = _server.GetMessages();
             ListViewMessages.ItemsSource = ListMessages;
             //} catch (Exception) { }
         }
@@ -41,15 +61,28 @@ namespace SimpleChatClient
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Server.SendMessage("tulpass", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", new byte[0]);
-            ListMessages = Server.GetMessages();
-            SetListMessages();
-            //AppendMessage(Server.GetLastInsertMessage());
+            _server.SendMessage("tulpass", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", new byte[0]);
+            RefreshListMessages();
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ButtonRegistration_Click(object sender, RoutedEventArgs e)
         {
+            var dialog = new UserRegistration(_server);
+            dialog.ShowDialog();
+            RefreshComboBoxUsers();
+        }
 
+        private void ButtonLogIn_Click(object sender, RoutedEventArgs e)
+        {
+            string nickname = ComboBoxFromUser.Text;
+            if (nickname.Trim() != "" && _server.LoginAs(nickname))
+            {
+                TextBlockLogged.Text = nickname;
+            }
+            else
+            {
+                TextBlockLogged.Text = "";
+            }
         }
     }
 }

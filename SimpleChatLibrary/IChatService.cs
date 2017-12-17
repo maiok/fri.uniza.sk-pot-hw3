@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace SimpleChatLibrary
@@ -8,6 +9,12 @@ namespace SimpleChatLibrary
     {
         [OperationContract]
         List<Message> GetMessages();
+
+        [OperationContract]
+        List<User> GetUsers();
+
+        [OperationContract]
+        List<String> GetUserNickNames();
 
         [OperationContract]
         void SendMessage(string toUser, string text, byte[] imageBytes);
@@ -23,5 +30,8 @@ namespace SimpleChatLibrary
 
         [OperationContract]
         Message GetLastInsertMessage();
+
+        [OperationContract]
+        User GetUserByNickName(string nickname);
     }
 }
