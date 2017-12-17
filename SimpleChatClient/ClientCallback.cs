@@ -3,7 +3,7 @@ using System.Net.Mime;
 using System.ServiceModel;
 using SimpleChatLibrary;
 using System.Windows;
-using SimpleChatApp;
+using SimpleChatClient;
 
 namespace SimpleChatClient
 {

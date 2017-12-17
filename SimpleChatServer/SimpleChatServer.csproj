@@ -51,7 +51,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimpleChatApp\SimpleChatClient.csproj">
+    <ProjectReference Include="..\SimpleChatClient\SimpleChatClient.csproj">
       <Project>{b2559fdf-d936-484d-9d89-a6eafca255f3}</Project>
       <Name>SimpleChatClient</Name>
     </ProjectReference>

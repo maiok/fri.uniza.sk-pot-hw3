@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChatLibrary", "Simple
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChatServer", "SimpleChatServer\SimpleChatServer.csproj", "{B9A9F8EE-1CCC-48F9-9C14-714C65B6EAC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChatClient", "SimpleChatApp\SimpleChatClient.csproj", "{B2559FDF-D936-484D-9D89-A6EAFCA255F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChatClient", "SimpleChatClient\SimpleChatClient.csproj", "{B2559FDF-D936-484D-9D89-A6EAFCA255F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

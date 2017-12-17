@@ -20,5 +20,8 @@ namespace SimpleChatLibrary
 
         [OperationContract]
         bool IsUserLogged();
+
+        [OperationContract]
+        Message GetLastInsertMessage();
     }
 }

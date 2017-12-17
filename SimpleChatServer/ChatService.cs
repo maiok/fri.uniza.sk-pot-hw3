@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ServiceModel;
+using SimpleChatClient;
 using SimpleChatLibrary;
 
 namespace SimpleChatServer
@@ -20,17 +21,22 @@ namespace SimpleChatServer
 
         public void SendMessage(string toUser, string text, byte[] imageBytes)
         {
+            User user = new User();
+            user.NickName = "tulpas";
+
+            _loggedUser = user;
+
             Message message = new Message();
             message.FromUser = _loggedUser;
-            message.ToUser = GetUserByNickName(toUser);
+            message.ToUser = user;
             message.Text = text;
             message.ImageBytes = imageBytes;
 
             // Pridanie spravy do chatu
             _messages.Add(message);
 
-            var client = OperationContext.Current.GetCallbackChannel<IClient>();
-            client.ShowMessage(message);
+            //var client = (ClientCallback) OperationContext.Current.GetCallbackChannel<IClient>();
+            //client.ShowMessage(message);
 
             // Ak je viac ako 10 sprav, odstran stare spravy
             //while (_messages.Count > 10)
@@ -68,6 +74,12 @@ namespace SimpleChatServer
             }
 
             return null;
+        }
+
+        public Message GetLastInsertMessage()
+        {
+            return _messages[0];
+            //return null;
         }
     }
 
