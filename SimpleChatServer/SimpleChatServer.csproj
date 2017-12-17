@@ -35,12 +35,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatService.cs" />
@@ -51,10 +45,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimpleChatClient\SimpleChatClient.csproj">
-      <Project>{b2559fdf-d936-484d-9d89-a6eafca255f3}</Project>
-      <Name>SimpleChatClient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SimpleChatLibrary\SimpleChatLibrary.csproj">
       <Project>{73d31b33-1b53-4cc4-a2fa-37ac2cc1d4b8}</Project>
       <Name>SimpleChatLibrary</Name>

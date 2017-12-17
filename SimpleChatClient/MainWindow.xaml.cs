@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.ServiceModel;
 using System.Windows;
+using System.Windows.Forms;
 using SimpleChatLibrary;
+using Message = SimpleChatLibrary.Message;
 
 namespace SimpleChatClient
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
         private static IChatService _server;
-        private List<String> DataFromUser { get; set; }
-        private List<String> DataToUser { get; set; }
-
-        private List<Message> ListMessages { get; set; }
 
         public MainWindow()
         {
@@ -28,6 +25,12 @@ namespace SimpleChatClient
             DataToUser = new List<string>();
         }
 
+        private List<string> DataFromUser { get; set; }
+        private List<string> DataToUser { get; set; }
+
+        private List<Message> ListMessages { get; set; }
+        private List<User> ListOnlineUsers { get; set; }
+
         // OBSLUHA GUI KOMPONENTOV *********************************************************
 
         // Metoda mi refreshne obe comboboxy zo zoznamom uzivatelov
@@ -37,31 +40,45 @@ namespace SimpleChatClient
             DataFromUser = _server.GetUserNickNames();
             ComboBoxFromUser.ItemsSource = DataFromUser;
             // Naplnim si pouzivatelov do comboboxu pre cieloveho pouzivatela
-            DataToUser.Add("Všetci");
-            DataToUser.AddRange(_server.GetUserNickNames());
+            // Musel to urobit cez pomList, ako keby treba nastavit premennu cez set
+            // aby ju mohol Binding vo WPF zachytit a tym refreshnut zoznam
+            var usersPom = new List<string>();
+            usersPom.Add("Všetci");
+            usersPom.AddRange(_server.GetUserNickNames());
+            DataToUser = usersPom;
             ComboBoxToUser.ItemsSource = DataToUser;
             ComboBoxToUser.SelectedIndex = 0; // Defaultne Vsetci
+        }
+
+        public void RefreshSettings()
+        {
+            //todo tu som chcel refreshnut nastavenia farieb a velkosti pisma
         }
 
         // OBSLUHA GUI KOMPONENTOV *********************************************************
 
         public void RefreshListMessages()
         {
-            //try
-            //{
             ListMessages = _server.GetMessages();
             ListViewMessages.ItemsSource = ListMessages;
-            //} catch (Exception) { }
+        }
+
+        public void RefreshListOnlineUsers()
+        {
+            ListOnlineUsers = _server.GetUsers();
+            ListViewOnlineUsers.ItemsSource = ListOnlineUsers;
         }
 
         public void AppendMessage(Message message)
         {
-
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ButtonSendText_Click(object sender, RoutedEventArgs e)
         {
-            _server.SendMessage("tulpass", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", new byte[0]);
+            var toUser = ComboBoxToUser.Text.Trim() != "Všetci" ? ComboBoxToUser.Text : "";
+
+            _server.SendMessage(toUser, TextBoxText.Text);
+            TextBoxText.Clear();
             RefreshListMessages();
         }
 
@@ -70,19 +87,50 @@ namespace SimpleChatClient
             var dialog = new UserRegistration(_server);
             dialog.ShowDialog();
             RefreshComboBoxUsers();
+            RefreshListOnlineUsers();
         }
 
         private void ButtonLogIn_Click(object sender, RoutedEventArgs e)
         {
-            string nickname = ComboBoxFromUser.Text;
+            var nickname = ComboBoxFromUser.Text;
             if (nickname.Trim() != "" && _server.LoginAs(nickname))
-            {
                 TextBlockLogged.Text = nickname;
-            }
             else
-            {
                 TextBlockLogged.Text = "";
+        }
+
+        private void ButtonSendImage_Click(object sender, RoutedEventArgs e)
+        {
+            var image = new OpenFileDialog();
+
+            if (image.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                var imagePath = image.FileName;
+                var toUser = ComboBoxToUser.Text.Trim() != "Všetci" ? ComboBoxToUser.Text : "";
+
+                // Povolene extensions
+                switch (Path.GetExtension(imagePath))
+                {
+                    case ".jpg":
+                        break;
+                    case ".png":
+                        break;
+                    case ".jpeg":
+                        break;
+                    default:
+                        imagePath = "";
+                        break;
+                }
+
+                _server.SendImage(toUser, imagePath);
+                RefreshListMessages();
             }
+        }
+
+        private void ButtonSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new SettingsWindow(_server);
+            dialog.ShowDialog();
         }
     }
 }

@@ -4,7 +4,7 @@ using SimpleChatLibrary;
 namespace SimpleChatClient
 {
     /// <summary>
-    /// Interaction logic for UserRegistration.xaml
+    ///     Interaction logic for UserRegistration.xaml
     /// </summary>
     public partial class UserRegistration : Window
     {
@@ -18,7 +18,7 @@ namespace SimpleChatClient
 
         private void ButtonAddUser_Click(object sender, RoutedEventArgs e)
         {
-            string newUserName = TextBoxNewNickName.Text;
+            var newUserName = TextBoxNewNickName.Text;
             // Najprv zistim, ci uz taky uzivatel existuje
             if (_server.GetUserByNickName(newUserName) != null)
             {

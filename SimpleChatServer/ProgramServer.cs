@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimpleChatServer
 {
-    class ProgramServer
+    internal class ProgramServer
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            ServiceHost selfHost = new ServiceHost(typeof(ChatService));
+            var selfHost = new ServiceHost(typeof(ChatService));
             try
             {
                 selfHost.Open();

@@ -7,6 +7,5 @@ namespace SimpleChatLibrary
         // Musi tu byt nejaka metoda typu OperationContract aby to vobec skompilovalo
         [OperationContract]
         void ShowMessage(Message message);
-
     }
 }

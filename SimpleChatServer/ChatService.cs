@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using SimpleChatClient;
 using SimpleChatLibrary;
 
 namespace SimpleChatServer
@@ -12,8 +9,10 @@ namespace SimpleChatServer
     public class ChatService : IChatService
     {
         private readonly List<Message> _messages = new List<Message>();
+
         // Thread-Safe dictionary, musi byt nastavene ConcurrencyMode.Multiple
         private readonly ConcurrentDictionary<string, User> _registeredUsers = new ConcurrentDictionary<string, User>();
+
         private User _loggedUser;
 
         public List<Message> GetMessages()
@@ -23,51 +22,46 @@ namespace SimpleChatServer
 
         public List<User> GetUsers()
         {
-            List<User> listUsers = new List<User>();
+            var listUsers = new List<User>();
             foreach (var user in _registeredUsers)
-            {
                 listUsers.Add(user.Value);
-            }
             return listUsers;
         }
 
         public List<string> GetUserNickNames()
         {
-            List<String> listUsers = new List<String>();
+            var listUsers = new List<string>();
             foreach (var user in _registeredUsers)
-            {
                 listUsers.Add(user.Key);
-            }
             return listUsers;
         }
 
-        public void SendMessage(string toUser, string text, byte[] imageBytes)
+        public void SendMessage(string toUser, string text)
         {
-            User user = new User();
-            user.NickName = "tulpas";
-
-            _loggedUser = user;
-
-            Message message = new Message();
+            var message = new Message();
+            // Kontrola prihlaseneho uzivatela sa vykona na strane klienta
             message.FromUser = _loggedUser;
-            message.ToUser = null;
+            message.ToUser = toUser.Trim() != "" ? GetUserByNickName(toUser) : null;
             message.Text = text;
-            message.ImageBytes = imageBytes;
 
             // Pridanie spravy do chatu
             _messages.Add(message);
+        }
 
-            //var client = (ClientCallback) OperationContext.Current.GetCallbackChannel<IClient>();
-            //client.ShowMessage(message);
+        public void SendImage(string toUser, string imagePath)
+        {
+            var message = new Message();
+            message.FromUser = _loggedUser;
+            message.ToUser = toUser.Trim() != "" ? GetUserByNickName(toUser) : null;
+            message.ImagePath = imagePath;
 
-            // Ak je viac ako 10 sprav, odstran stare spravy
-            //while (_messages.Count > 10)
-            //    _messages.RemoveAt(0);
+            // Pridanie obrazku do chatu
+            _messages.Add(message);
         }
 
         public bool RegisterUser(string nickname)
         {
-            User newUser = new User();
+            var newUser = new User();
             newUser.NickName = nickname;
 
             return _registeredUsers.TryAdd(nickname, newUser);
@@ -87,12 +81,8 @@ namespace SimpleChatServer
         public User GetUserByNickName(string nickname)
         {
             foreach (var user in _registeredUsers)
-            {
                 if (user.Key.ToLower() == nickname.ToLower())
-                {
                     return user.Value;
-                }
-            }
 
             return null;
         }
@@ -103,5 +93,4 @@ namespace SimpleChatServer
             //return null;
         }
     }
-
 }

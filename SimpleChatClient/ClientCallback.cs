@@ -1,9 +1,6 @@
-﻿using System;
-using System.Net.Mime;
-using System.ServiceModel;
-using SimpleChatLibrary;
+﻿using System.ServiceModel;
 using System.Windows;
-using SimpleChatClient;
+using SimpleChatLibrary;
 
 namespace SimpleChatClient
 {

@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskSimpleService", "TaskSimpleService\TaskSimpleService.csproj", "{EA5D78F5-E9FA-45B8-A719-7243B6BEE9A3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskAsciiArtService", "TaskAsciiArtService\TaskAsciiArtService.csproj", "{731436B5-E2F5-4347-B1FB-C5FA2D282C9A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChatLibrary", "SimpleChatLibrary\SimpleChatLibrary.csproj", "{73D31B33-1B53-4CC4-A2FA-37AC2CC1D4B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleChatServer", "SimpleChatServer\SimpleChatServer.csproj", "{B9A9F8EE-1CCC-48F9-9C14-714C65B6EAC1}"
@@ -19,14 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EA5D78F5-E9FA-45B8-A719-7243B6BEE9A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA5D78F5-E9FA-45B8-A719-7243B6BEE9A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA5D78F5-E9FA-45B8-A719-7243B6BEE9A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA5D78F5-E9FA-45B8-A719-7243B6BEE9A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{731436B5-E2F5-4347-B1FB-C5FA2D282C9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{731436B5-E2F5-4347-B1FB-C5FA2D282C9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{731436B5-E2F5-4347-B1FB-C5FA2D282C9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{731436B5-E2F5-4347-B1FB-C5FA2D282C9A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{73D31B33-1B53-4CC4-A2FA-37AC2CC1D4B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{73D31B33-1B53-4CC4-A2FA-37AC2CC1D4B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73D31B33-1B53-4CC4-A2FA-37AC2CC1D4B8}.Release|Any CPU.ActiveCfg = Release|Any CPU

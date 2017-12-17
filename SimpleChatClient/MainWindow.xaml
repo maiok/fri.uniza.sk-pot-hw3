@@ -6,70 +6,103 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:simpleChatLibrary="clr-namespace:SimpleChatLibrary;assembly=SimpleChatLibrary"
+        xmlns:properties="clr-namespace:SimpleChatClient.Properties"
         mc:Ignorable="d"
         Title="WCF Čet" Height="496.333" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="28"/>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="28" />
         </Grid.RowDefinitions>
-        <Button Name="ButtonSendText" Content="Odošli" HorizontalAlignment="Left" Margin="140,0,0,0" VerticalAlignment="Center" Width="50" Click="Button_Click" Grid.Row="3" Grid.Column="1" Height="20" Padding="0"/>
-        <ListView Name="ListViewMessages" Margin="10,0" Grid.Row="2" Grid.Column="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
+        <Button Name="ButtonSendText" Content="Odošli" HorizontalAlignment="Left" Margin="140,0,0,0"
+                VerticalAlignment="Center" Width="50" Click="ButtonSendText_Click" Grid.Row="3" Grid.Column="1"
+                Height="20" Padding="0" />
+        <ListView Name="ListViewMessages" Margin="10,0" Grid.Row="2" Grid.Column="0"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
+                  ScrollViewer.CanContentScroll="False">
             <ListView.ItemTemplate>
                 <DataTemplate DataType="simpleChatLibrary:Message">
                     <DockPanel x:Name="MessageRow">
-                        <TextBlock Text="{Binding Time}" FontWeight="Normal" Opacity="0.5" HorizontalAlignment="Left" Margin="5,0"/>
-                        <TextBlock Text="{Binding FromUser.NickName}" FontWeight="Bold" Foreground="DarkBlue" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                        <TextBlock Text="{Binding ToUser.NickName}" Margin="0,0,5,0" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding Time, StringFormat={}{0:HH:mm:ss}}" FontWeight="Normal" Opacity="0.5"
+                                   HorizontalAlignment="Left" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding FromUser.NickName}" FontWeight="Bold" Foreground="DarkBlue"
+                                   HorizontalAlignment="Left" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding ToUser.NickName}" Margin="5,0,0,0" Foreground="DarkBlue"
+                                   HorizontalAlignment="Left" />
                         <TextBlock HorizontalAlignment="Left">:</TextBlock>
-                        <TextBlock Text="{Binding Text}" HorizontalAlignment="Left" TextAlignment="Left" TextWrapping="WrapWithOverflow"/>
+                        <TextBlock Name="TextBlockMessageText" Text="{Binding Text}" HorizontalAlignment="Left"
+                                   TextAlignment="Left" TextWrapping="WrapWithOverflow" Margin="5,0,0,0" />
+                        <Image Source="{Binding ImagePath}" HorizontalAlignment="Left" Margin="5,0,0,0" />
                     </DockPanel>
 
+                    <!--Tu mam podmienku ci cielovy uzivatel je null-->
                     <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding ToUser}" Value="null">
-                            <Setter TargetName="MessageRow" Property="Background" Value="Orange"/>
+                        <DataTrigger Binding="{Binding ToUser}" Value="{x:Null}">
+                            <Setter TargetName="MessageRow" Property="Background" Value="Azure" />
                         </DataTrigger>
                     </DataTemplate.Triggers>
 
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Name="ButtonSendImage" HorizontalAlignment="Left" Margin="104,0,0,0" Grid.Row="3" VerticalAlignment="Center" Width="31" Grid.Column="1" Height="20" Padding="0,0,0,1" IsEnabled="False">
+        <Button Name="ButtonSendImage" HorizontalAlignment="Left" Margin="104,0,0,0" Grid.Row="3"
+                VerticalAlignment="Center" Width="31" Grid.Column="1" Height="20" Padding="0,0,0,1"
+                Click="ButtonSendImage_Click">
             <StackPanel Orientation="Vertical">
-                <Image Source="pack://application:,,,/Images/image.png" Height="16"></Image>
+                <Image Source="pack://application:,,,/Images/image.png" Height="16" />
             </StackPanel>
         </Button>
 
-        <Label Content="Správy&#xD;&#xA;" Margin="5,0,0,0" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Padding="5,0" RenderTransformOrigin="0.455,0.574" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="50"/>
-        <ListView Grid.Column="1" Margin="10,0" Grid.Row="2">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
+        <Label Content="Správy&#xD;&#xA;" Margin="5,0,0,0" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Padding="5,0"
+               RenderTransformOrigin="0.455,0.574" VerticalContentAlignment="Center" HorizontalAlignment="Left"
+               Width="50" />
+        <ListView Name="ListViewOnlineUsers" Grid.Column="1" Margin="10,0" Grid.Row="2">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="simpleChatLibrary:User">
+                    <DockPanel x:Name="MessageRow">
+                        <TextBlock Text="{Binding NickName}" FontWeight="Normal" HorizontalAlignment="Left"
+                                   Margin="5,0" />
+                    </DockPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
-        <Label Content="Online&#xA;" Margin="10,0,0,0" Grid.Row="1" FontWeight="Bold" Padding="5,0" RenderTransformOrigin="0.455,0.574" VerticalContentAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Width="50"/>
-        <Label Content="Pre:" Margin="10,0,0,0" Grid.Row="3" Grid.Column="0" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" Width="20"/>
-        <ComboBox Name="ComboBoxToUser" Margin="35,0,0,0" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="6,0,5,0" ItemsSource="{Binding DataToUser}" Height="20" />
-        <TextBox Name="TextBoxText" Margin="159,0,101,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Grid.ColumnSpan="2"
+        <Label Content="Online&#xA;" Margin="10,0,0,0" Grid.Row="1" FontWeight="Bold" Padding="5,0"
+               RenderTransformOrigin="0.455,0.574" VerticalContentAlignment="Center" HorizontalAlignment="Left"
+               Grid.Column="1" Width="50" />
+        <Label Content="Pre:" Margin="10,0,0,0" Grid.Row="3" Grid.Column="0" Padding="0"
+               VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left"
+               Width="20" />
+        <ComboBox Name="ComboBoxToUser" Margin="35,0,0,0" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"
+                  HorizontalAlignment="Left" Padding="6,0,5,0" ItemsSource="{Binding DataToUser}" Height="20" />
+        <TextBox Name="TextBoxText" Margin="159,0,101,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center"
+                 Grid.ColumnSpan="2"
                  Grid.Column="0" Height="20" />
-        <Button Grid.Row="0" Grid.Column="1" Margin="150,5,10,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+        <Button Name="ButtonSettings" Grid.Row="0" Grid.Column="1" Margin="150,5,10,0"
+                VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="ButtonSettings_Click">
             <StackPanel Orientation="Vertical">
-                <Image Source="pack://application:,,,/Images/settings.png" Height="16"></Image>
+                <Image Source="pack://application:,,,/Images/settings.png" Height="16" />
             </StackPanel>
         </Button>
-        <Button Name="ButtonLogIn" Grid.Row="0" Grid.Column="0" Content="Prihlás ma ako" HorizontalAlignment="Left" Margin="10,5,0,0" Width="100" Click="ButtonLogIn_Click"/>
-        <ComboBox Name="ComboBoxFromUser" Grid.Row="0" Grid.Column="0" Margin="115,5,0,0" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding DataFromUser}"/>
-        <Button Name="ButtonRegistration" Grid.Row="0" Grid.Column="0" Content="Registrácia" HorizontalAlignment="Right" Margin="0,5,0,0" Width="75" HorizontalContentAlignment="Center" Click="ButtonRegistration_Click"/>
-        <Label Content="Prihlásený:" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Width="66"/>
-        <TextBlock HorizontalAlignment="Left" Margin="115,0,0,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Height="16" Width="38"><Run Text="Spr"/><Run Text="áva:"/></TextBlock>
-        <TextBlock Name="TextBlockLogged" Grid.Column="1" HorizontalAlignment="Left" Margin="63,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Button Name="ButtonLogIn" Grid.Row="0" Grid.Column="0" Content="Prihlás ma ako" HorizontalAlignment="Left"
+                Margin="10,5,0,0" Width="100" Click="ButtonLogIn_Click" />
+        <ComboBox Name="ComboBoxFromUser" Grid.Row="0" Grid.Column="0" Margin="115,5,0,0" Height="20"
+                  HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding DataFromUser}" />
+        <Button Name="ButtonRegistration" Grid.Row="0" Grid.Column="0" Content="Registrácia"
+                HorizontalAlignment="Right" Margin="0,5,0,0" Width="75" HorizontalContentAlignment="Center"
+                Click="ButtonRegistration_Click" />
+        <Label Content="Prihlásený:" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Width="66" />
+        <TextBlock HorizontalAlignment="Left" Margin="115,0,0,0" Grid.Row="3" TextWrapping="Wrap"
+                   VerticalAlignment="Center" Height="16" Width="38">
+            <Run Text="Spr" /><Run Text="áva:" />
+        </TextBlock>
+        <TextBlock Name="TextBlockLogged" Grid.Column="1" HorizontalAlignment="Left" Margin="63,5,0,0"
+                   TextWrapping="Wrap" VerticalAlignment="Top" />
 
     </Grid>
 </Window>

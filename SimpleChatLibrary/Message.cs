@@ -6,8 +6,15 @@ namespace SimpleChatLibrary
     [DataContract]
     public class Message
     {
+        public Message()
+        {
+            Time = DateTime.Now;
+        }
+
         [DataMember]
         public User FromUser { get; set; }
+
+        [DataMember]
         public User ToUser { get; set; }
 
         [DataMember]
@@ -17,13 +24,7 @@ namespace SimpleChatLibrary
         public string Text { get; set; }
 
         [DataMember]
-        public byte[] ImageBytes { get; set; }
-
-        public Message()
-        {
-            Time = DateTime.Now;
-        }
-
+        public string ImagePath { get; set; }
 
         public override string ToString()
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace SimpleChatLibrary
@@ -14,10 +13,13 @@ namespace SimpleChatLibrary
         List<User> GetUsers();
 
         [OperationContract]
-        List<String> GetUserNickNames();
+        List<string> GetUserNickNames();
 
         [OperationContract]
-        void SendMessage(string toUser, string text, byte[] imageBytes);
+        void SendMessage(string toUser, string text);
+
+        [OperationContract]
+        void SendImage(string toUser, string imagePath);
 
         [OperationContract]
         bool RegisterUser(string nickname);
